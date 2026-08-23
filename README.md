@@ -18,6 +18,13 @@ completo — tudo em React.
 
 ---
 
+⬡ Acesso ao Projeto
+
+[![Ver Projeto](https://img.shields.io/badge/Ver%20Projeto-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://devorbit-psi.vercel.app)
+
+[![GitHub](https://img.shields.io/badge/Código%20Fonte-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/EVI-DEV1/devorbit)
+
+
 ## ✨ Funcionalidades
 
 ### Para quem usa
@@ -43,21 +50,6 @@ Tudo que o admin altera aparece **imediatamente** para os usuários — sem mexe
 
 ---
 
-## 🚀 Como rodar
-
-```bash
-git clone https://github.com/EVI-DEV1/devorbit.git
-cd devorbit
-npm install
-npm run dev        # app (localhost:3000) + API json-server (localhost:8001)
-```
-
-Ou em dois terminais separados:
-
-```bash
-npm run api        # API json-server na porta 8001
-npm start          # app React na porta 3000
-```
 
 > 💡 **Sem a API?** O app continua funcionando: usa os dados de `src/data` e salva
 > as alterações no `localStorage`. O painel admin mostra no topo se está
@@ -119,21 +111,6 @@ src/
 
 ---
 
-## 🎨 Identidade visual
-
-| Elemento   | Valor                                        |
-| ---------- | -------------------------------------------- |
-| Nome       | **DevOrbit**                                 |
-| Fundo      | `#120F1C` / superfícies `#1C1828` `#252036`  |
-| Ação       | Verde `#00E676`                              |
-| Destaque   | Violeta `#8B5CF6` (área administrativa)      |
-| Tipografia | **Sora** (títulos) + **Inter** (texto)       |
-| Logo       | SVG próprio — planeta de código com órbita   |
-
-Todos os tokens vivem em [`src/styles/theme.js`](src/styles/theme.js).
-
----
-
 ## 🔌 Pronto para um backend real
 
 Os componentes só conversam com `DataContext` e `AuthContext`. Para trocar o
@@ -157,6 +134,8 @@ tela precisa mudar.
 
 <div align="center">
 
-Feito com 💚 por **Evi Vitoriano** — [github.com/EVI-DEV1](https://github.com/EVI-DEV1)
+⬡ Autoria
+
+Desenvolvido por EVI-DEV1 © 2026
 
 </div>
