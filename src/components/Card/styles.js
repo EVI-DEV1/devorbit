@@ -1,21 +1,25 @@
 import styled from "styled-components";
+import { theme, media } from "../../styles/theme";
+
+const { colors } = theme;
 
 export const CardContainer = styled.article`
   width: 100%;
   overflow: hidden;
 
-  background: #211c33;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 28px;
 
-  margin-bottom: 32px;
+  background: ${colors.surface};
+  border: 1px solid ${colors.border};
+  border-radius: ${theme.radius.xl};
+
+  box-shadow: ${theme.shadow.card};
 
   transition: 0.3s;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
 
   &:hover {
-    border-color: rgba(0, 230, 118, 0.55);
-    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 230, 118, 0.45);
+    box-shadow: ${theme.shadow.cardHover};
   }
 `;
 
@@ -26,8 +30,66 @@ export const ImageBackground = styled.img`
   display: block;
   object-fit: cover;
 
-  @media (max-width: 600px) {
-    height: 210px;
+  ${media.mobile} {
+    height: 190px;
+  }
+`;
+
+export const Content = styled.div`
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 26px;
+
+  ${media.mobile} {
+    padding: 18px 16px;
+  }
+`;
+
+export const AdminActions = styled.div`
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 2;
+
+  display: flex;
+  gap: 8px;
+
+  ${media.mobile} {
+    top: 14px;
+    right: 14px;
+  }
+`;
+
+export const AdminButton = styled.button`
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid ${({ $danger }) => ($danger ? colors.danger : colors.accent)};
+  border-radius: ${theme.radius.md};
+
+  background: ${({ $danger }) => ($danger ? colors.dangerSoft : colors.accentSoft)};
+  color: ${({ $danger }) => ($danger ? colors.danger : "#c4b5fd")};
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  svg {
+    font-size: 18px;
+  }
+
+  &:hover {
+    background: ${({ $danger }) => ($danger ? colors.danger : colors.accent)};
+    color: ${colors.text};
   }
 `;
 
@@ -36,88 +98,207 @@ export const UserInfo = styled.div`
   align-items: center;
 
   margin-bottom: 12px;
-  padding-right: 64px;
+  padding-right: 96px;
 
   div {
+    min-width: 0;
     margin-left: 12px;
   }
 
   h4 {
-    color: #ffffff;
-    font-size: 17px;
+    overflow: hidden;
+
+    color: ${colors.text};
+
+    font-size: 16px;
     font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   p {
-    color: #9fa8b7;
+    color: ${colors.textSubtle};
     font-size: 13px;
+  }
+
+  ${media.mobile} {
+    padding-right: 88px;
   }
 `;
 
 export const UserPicture = styled.img`
-  width: 54px;
-  height: 54px;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
 
+  border: 3px solid ${colors.primary};
   border-radius: 50%;
-  border: 3px solid #00e676;
 
   object-fit: cover;
 `;
 
 export const PostInfo = styled.div`
-  margin: 18px 0 8px;
+  margin: 16px 0 8px;
 
   h4 {
-    color: #ffffff;
+    margin-bottom: 10px;
 
-    margin-bottom: 12px;
+    color: ${colors.text};
 
-    font-size: 25px;
+    font-size: 24px;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
   }
 
   p {
-    color: #c8c8c8;
+    color: ${colors.textMuted};
 
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.7;
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  ${media.mobile} {
+    h4 {
+      font-size: 20px;
+    }
   }
 `;
 
 export const HasInfo = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 
-  margin-top: 18px;
+  margin-top: 16px;
 
   span {
-    padding: 8px 15px;
+    padding: 7px 14px;
 
-    border-radius: 30px;
+    border-radius: ${theme.radius.pill};
 
-    background: #30294a;
-    color: #00e676;
+    background: ${colors.surfaceElevated};
+    color: ${colors.primary};
 
     font-size: 13px;
     font-weight: 600;
   }
 `;
 
+export const CourseArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  margin-top: 22px;
+  padding: 18px;
+
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: ${theme.radius.lg};
+
+  background: ${colors.accentSoft};
+
+  ${media.mobile} {
+    padding: 14px;
+  }
+`;
+
+export const SubscribersCount = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: ${colors.text};
+  font-size: 14px;
+  font-weight: 600;
+
+  svg {
+    color: ${colors.primary};
+    font-size: 19px;
+  }
+`;
+
+export const CourseButtons = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  ${media.mobile} {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const courseButtonBase = `
+  min-width: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  padding: 12px 20px;
+
+  border-radius: ${theme.radius.md};
+
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: 0.2s;
+
+  svg {
+    font-size: 19px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 100%;
+  }
+`;
+
+export const SubscribeButton = styled.button`
+  ${courseButtonBase}
+
+  border: 1px solid ${({ $subscribed }) => ($subscribed ? colors.primary : colors.accent)};
+
+  background: ${({ $subscribed }) => ($subscribed ? colors.primarySoft : colors.accent)};
+  color: ${({ $subscribed }) => ($subscribed ? colors.primary : colors.text)};
+
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+`;
+
+export const AccessCourseButton = styled.button`
+  ${courseButtonBase}
+
+  border: 1px solid ${({ $locked }) => ($locked ? colors.borderStrong : colors.primary)};
+
+  background: transparent;
+  color: ${({ $locked }) => ($locked ? colors.textSubtle : colors.primary)};
+
+  &:hover {
+    transform: translateY(-2px);
+    background: ${({ $locked }) => ($locked ? colors.surfaceSoft : colors.primarySoft)};
+  }
+`;
 
 export const Actions = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 
-  margin-top: 24px;
-  padding-top: 18px;
+  margin-top: 22px;
+  padding-top: 16px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid ${colors.border};
 
-  @media (max-width: 650px) {
+  ${media.mobile} {
     grid-template-columns: repeat(2, 1fr);
   }
 `;
@@ -133,26 +314,25 @@ export const ActionButton = styled.button`
   padding: 9px;
 
   border: none;
-  border-radius: 8px;
+  border-radius: ${theme.radius.sm};
 
-  background: ${({ $active }) =>
-    $active ? "rgba(0, 230, 118, 0.12)" : "transparent"};
-
-  color: ${({ $active }) =>
-    $active ? "#00e676" : "#b8b8b8"};
+  background: ${({ $active }) => ($active ? colors.primarySoft : "transparent")};
+  color: ${({ $active }) => ($active ? colors.primary : colors.textMuted)};
 
   cursor: pointer;
   font-size: 14px;
+  font-weight: ${({ $active }) => ($active ? 700 : 500)};
 
   transition: 0.2s;
 
   svg {
     font-size: 18px;
+    fill: ${({ $active }) => ($active ? colors.primarySoft : "none")};
   }
 
   &:hover {
-    background: rgba(0, 230, 118, 0.1);
-    color: #00e676;
+    background: ${colors.primarySoft};
+    color: ${colors.primary};
   }
 `;
 
@@ -160,7 +340,7 @@ export const CommentArea = styled.div`
   margin-top: 18px;
   padding-top: 18px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid ${colors.border};
 `;
 
 export const CommentForm = styled.form`
@@ -170,40 +350,50 @@ export const CommentForm = styled.form`
 
 export const CommentInput = styled.input`
   flex: 1;
+  min-width: 0;
 
   padding: 12px 14px;
 
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 9px;
+  border: 1px solid ${colors.border};
+  border-radius: ${theme.radius.md};
 
-  background: #17131f;
-  color: #ffffff;
+  background: ${colors.background};
+  color: ${colors.text};
 
   outline: none;
 
+  &::placeholder {
+    color: ${colors.textSubtle};
+  }
+
   &:focus {
-    border-color: #00e676;
+    border-color: ${colors.primary};
   }
 `;
 
 export const SendCommentButton = styled.button`
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   border: none;
-  border-radius: 9px;
+  border-radius: ${theme.radius.md};
 
-  background: #00e676;
-  color: #15111e;
+  background: ${colors.primary};
+  color: ${colors.background};
 
   cursor: pointer;
 
   svg {
     font-size: 18px;
+  }
+
+  &:hover {
+    background: ${colors.primaryStrong};
   }
 `;
 
@@ -221,207 +411,85 @@ export const CommentItem = styled.div`
 
   padding: 12px;
 
-  border-radius: 10px;
-
-  background: rgba(255, 255, 255, 0.04);
+  border-radius: ${theme.radius.md};
+  background: ${colors.surfaceSoft};
 
   img {
     width: 38px;
     height: 38px;
+    flex-shrink: 0;
 
     border-radius: 50%;
     object-fit: cover;
   }
 
-  strong {
-    color: #ffffff;
-    font-size: 14px;
+  > div {
+    flex: 1;
+    min-width: 0;
   }
 
   p {
-    color: #c8c8c8;
-
     margin-top: 4px;
+
+    color: ${colors.textMuted};
 
     font-size: 14px;
     line-height: 1.5;
+    overflow-wrap: anywhere;
   }
 `;
 
-export const EmptyComments = styled.p`
-  color: #8f8f9b;
-  font-size: 14px;
-`;
-export const CourseArea = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-
-  margin-top: 24px;
-  padding: 18px;
-
-  border: 1px solid rgba(111, 0, 255, 0.35);
-  border-radius: 14px;
-
-  background: rgba(111, 0, 255, 0.08);
-`;
-
-export const SubscribersCount = styled.div`
+export const CommentHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
 
-  color: #cfcfcf;
-  font-size: 14px;
-  font-weight: 600;
+  strong {
+    overflow: hidden;
 
-  svg {
-    color: #00e676;
-    font-size: 19px;
+    color: ${colors.text};
+    font-size: 14px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  time {
+    flex-shrink: 0;
+
+    color: ${colors.textSubtle};
+    font-size: 12px;
   }
 `;
 
-export const CourseButtons = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+export const CommentDeleteButton = styled.button`
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
 
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-`;
-
-export const SubscribeButton = styled.button`
-  min-width: 150px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-
-  padding: 12px 20px;
-
-  border: ${({ $subscribed }) =>
-    $subscribed ? "1px solid #00e676" : "none"};
-
-  border-radius: 10px;
-
-  background: ${({ $subscribed }) =>
-    $subscribed ? "rgba(0, 230, 118, 0.12)" : "#6f00ff"};
-
-  color: ${({ $subscribed }) =>
-    $subscribed ? "#00e676" : "#ffffff"};
-
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
-
-  transition: 0.2s;
-
-  svg {
-    font-size: 19px;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-  }
-
-  @media (max-width: 600px) {
-    width: 100%;
-  }
-`;
-
-export const AccessCourseButton = styled.button`
-  min-width: 150px;
+  margin-left: auto;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
 
-  padding: 12px 20px;
-
-  border: 1px solid
-    ${({ $locked }) => ($locked ? "#77727f" : "#00e676")};
-
-  border-radius: 10px;
+  border: none;
+  border-radius: 6px;
 
   background: transparent;
-
-  color: ${({ $locked }) =>
-    $locked ? "#9b98a1" : "#00e676"};
+  color: ${colors.textSubtle};
 
   cursor: pointer;
+
+  transition: 0.2s;
+
+  &:hover {
+    background: ${colors.dangerSoft};
+    color: ${colors.danger};
+  }
+`;
+
+export const EmptyComments = styled.p`
+  color: ${colors.textSubtle};
   font-size: 14px;
-  font-weight: 700;
-
-  transition: 0.2s;
-
-  svg {
-    font-size: 20px;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-
-    background: ${({ $locked }) =>
-      $locked
-        ? "rgba(255, 255, 255, 0.04)"
-        : "rgba(0, 230, 118, 0.1)"};
-  }
-
-  @media (max-width: 600px) {
-    width: 100%;
-  }
-`;
-export const DeletePostButton = styled.button`
-  position: absolute;
-  top: 26px;
-  right: 66px;
-
-  width: 46px;
-  height: 46px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 2px solid #ff5c5c;
-  border-radius: 12px;
-
-  background: rgba(255, 92, 92, 0.12);
-  color: #ff5c5c;
-
-  cursor: pointer;
-  z-index: 5;
-
-  transition: 0.2s;
-
-  svg {
-    font-size: 22px;
-  }
-
-  &:hover {
-    background: #ff5c5c;
-    color: #ffffff;
-    transform: scale(1.08);
-  }
-`;
-
-export const Content = styled.div`
-  position: relative;
-
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-
-  padding: 26px;
-
-  @media (max-width: 600px) {
-    padding: 20px;
-  }
 `;

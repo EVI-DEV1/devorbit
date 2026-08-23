@@ -1,38 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 
-import logo from "../../assets/logo-dio.png";
+import { Logo } from "../Logo";
 
-import {
-    Header,
-    Container,
-    Logo,
-    BackButton
-} from "./styles";
+import { Header, Container, BackButton } from "./styles";
 
 const AuthHeader = () => {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  return (
+    <Header>
+      <Container>
+        <Logo onClick={() => navigate("/")} />
 
-    return (
-        <Header>
-            <Container>
-
-                <Logo
-                    src={logo}
-                    alt="Logo"
-                    onClick={() => navigate("/")}
-                />
-
-                <BackButton onClick={() => navigate("/")}>
-                    <FaArrowLeft />
-                    Inicio
-                    
-                </BackButton>
-
-            </Container>
-        </Header>
-    );
-}
+        <BackButton type="button" onClick={() => navigate("/")}>
+          <FaArrowLeft />
+          Início
+        </BackButton>
+      </Container>
+    </Header>
+  );
+};
 
 export { AuthHeader };

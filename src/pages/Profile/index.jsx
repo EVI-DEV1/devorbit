@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import defaultAvatar from "../../assets/avatar-default.svg";
@@ -12,41 +12,70 @@ import { ProfileCourses } from "../../components/ProfileCourses";
 import { ImageViewer } from "../../components/ImageViewer";
 import { ImageMenu } from "../../components/ImageMenu";
 
-import { api } from "../../services/api";
+import { useAuth } from "../../contexts/AuthContext";
+import { useData } from "../../contexts/DataContext";
 
 import {
   Container,
   ProfileContentCard,
+  Bio,
+  Location,
+  ButtonRow,
+  PrimaryButton,
+  SecondaryButton,
+  AdminTag,
 } from "./styles";
 
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
 const Profile = () => {
   const navigate = useNavigate();
-
-  const loggedUser = JSON.parse(
-    localStorage.getItem("loggedUser")
-  );
+  const { user, isAdmin, updateProfile } = useAuth();
+  const { courses, posts } = useData();
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageMenu, setImageMenu] = useState(null);
-  const [isSavingImage, setIsSavingImage] =
-    useState(false);
+  const [isSavingImage, setIsSavingImage] = useState(false);
 
   const avatarInputRef = useRef(null);
   const coverInputRef = useRef(null);
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
+  // Cursos com progresso do usuário (para estatísticas e lista).
+  const myCourses = useMemo(() => {
+    const progress = user?.progress || {};
+
+    return courses
+      .filter((course) => Object.prototype.hasOwnProperty.call(progress, course.id) ||
+        Object.prototype.hasOwnProperty.call(progress, String(course.id)))
+      .map((course) => ({
+        ...course,
+        percent: Number(progress[course.id] ?? progress[String(course.id)] ?? 0),
+      }))
+      .sort((a, b) => b.percent - a.percent);
+  }, [courses, user]);
+
+  const completedCourses = myCourses.filter((course) => course.percent >= 100).length;
+
+  const savedPosts = useMemo(() => {
+    const id = String(user?.id || user?.email);
+    return posts.filter((post) => (post.savedBy || []).includes(id)).length;
+  }, [posts, user]);
+
+  const statsItems = [
+    { label: "XP", value: `⭐ ${Number(user?.xp || 0).toLocaleString("pt-BR")}` },
+    { label: "Cursos", value: `📚 ${myCourses.length}` },
+    { label: "Concluídos", value: `🎓 ${completedCourses}` },
+    { label: "Projetos", value: `🏆 ${(user?.projects || []).length}` },
+    { label: "Salvos", value: `🔖 ${savedPosts}` },
+  ];
+
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
-
       reader.onload = () => resolve(reader.result);
-      reader.onerror = () =>
-        reject(new Error("Não foi possível ler a imagem."));
-
+      reader.onerror = () => reject(new Error("Não foi possível ler a imagem."));
       reader.readAsDataURL(file);
     });
-  };
 
   const validateImage = (file) => {
     if (!file.type.startsWith("image/")) {
@@ -63,31 +92,9 @@ const Profile = () => {
   };
 
   const saveImage = async (field, imageBase64) => {
-    if (!loggedUser?.id) {
-      alert("Faça login novamente.");
-      navigate("/login");
-      return;
-    }
-
     try {
       setIsSavingImage(true);
-
-      const updatedUser = {
-        ...loggedUser,
-        [field]: imageBase64,
-      };
-
-      const { data } = await api.put(
-        `/users/${loggedUser.id}`,
-        updatedUser
-      );
-
-      localStorage.setItem(
-        "loggedUser",
-        JSON.stringify(data)
-      );
-
-      window.location.reload();
+      updateProfile({ [field]: imageBase64 });
     } catch (error) {
       console.error("Erro ao salvar imagem:", error);
       alert("Não foi possível salvar a imagem.");
@@ -96,10 +103,7 @@ const Profile = () => {
     }
   };
 
-  const handleImageSelected = async (
-    event,
-    field
-  ) => {
+  const handleImageSelected = async (event, field) => {
     const file = event.target.files?.[0];
 
     if (!file || !validateImage(file)) {
@@ -120,16 +124,14 @@ const Profile = () => {
 
   const handleViewImage = () => {
     if (imageMenu === "avatar") {
-      setSelectedImage(
-        loggedUser?.avatar || defaultAvatar
-      );
+      setSelectedImage(user?.avatar || defaultAvatar);
     }
 
     if (imageMenu === "cover") {
-      if (!loggedUser?.cover) {
+      if (!user?.cover) {
         alert("Nenhuma foto de capa foi adicionada.");
       } else {
-        setSelectedImage(loggedUser.cover);
+        setSelectedImage(user.cover);
       }
     }
 
@@ -137,14 +139,8 @@ const Profile = () => {
   };
 
   const handleUploadImage = () => {
-    if (imageMenu === "avatar") {
-      avatarInputRef.current?.click();
-    }
-
-    if (imageMenu === "cover") {
-      coverInputRef.current?.click();
-    }
-
+    if (imageMenu === "avatar") avatarInputRef.current?.click();
+    if (imageMenu === "cover") coverInputRef.current?.click();
     setImageMenu(null);
   };
 
@@ -157,34 +153,22 @@ const Profile = () => {
 
     if (!confirmed) return;
 
-    if (imageMenu === "avatar") {
-      await saveImage("avatar", "");
-    }
-
-    if (imageMenu === "cover") {
-      await saveImage("cover", "");
-    }
-
+    await saveImage(imageMenu, "");
     setImageMenu(null);
   };
 
-  if (!loggedUser) {
+  if (!user) {
     return (
       <>
         <Header variant="home" />
-
         <Container>
           <ProfileContentCard>
-            <p style={{ color: "#ffffff" }}>
-              Sua sessão terminou. Faça login novamente.
-            </p>
-
-            <button
-              type="button"
-              onClick={() => navigate("/login")}
-            >
-              Ir para o login
-            </button>
+            <p>Sua sessão terminou. Faça login novamente.</p>
+            <ButtonRow>
+              <PrimaryButton type="button" onClick={() => navigate("/login")}>
+                Ir para o login
+              </PrimaryButton>
+            </ButtonRow>
           </ProfileContentCard>
         </Container>
       </>
@@ -197,109 +181,46 @@ const Profile = () => {
 
       <Container>
         <ProfileHeader
-          user={loggedUser}
-          onAvatarClick={() =>
-            setSelectedImage(
-              loggedUser.avatar || defaultAvatar
-            )
-          }
+          user={user}
+          onAvatarClick={() => setSelectedImage(user.avatar || defaultAvatar)}
           onCoverClick={() => {
-            if (loggedUser.cover) {
-              setSelectedImage(loggedUser.cover);
-            }
+            if (user.cover) setSelectedImage(user.cover);
           }}
-          onAvatarCameraClick={() =>
-            setImageMenu("avatar")
-          }
-          onCoverCameraClick={() =>
-            setImageMenu("cover")
-          }
+          onAvatarCameraClick={() => setImageMenu("avatar")}
+          onCoverCameraClick={() => setImageMenu("cover")}
         />
 
         <ProfileContentCard>
-          <p
-            style={{
-              color: "#cfcfcf",
-              lineHeight: "1.6",
-              marginBottom: "26px",
-            }}
-          >
-            {loggedUser.bio ||
-              "Nenhuma biografia cadastrada."}
-          </p>
+          {isAdmin && <AdminTag>Administrador</AdminTag>}
 
-          {loggedUser.location && (
-            <p
-              style={{
-                color: "#cfcfcf",
-                marginBottom: "24px",
-              }}
-            >
-              📍 {loggedUser.location}
-            </p>
-          )}
+          {user.profession && <Location as="p">{user.profession}</Location>}
 
-          <ProfileStats />
+          <Bio>{user.bio || "Nenhuma biografia cadastrada."}</Bio>
 
-          <ProfileSkills
-            skills={loggedUser.skills || []}
-          />
+          {user.location && <Location>📍 {user.location}</Location>}
 
-          <ProfileProjects />
+          <ProfileStats items={statsItems} />
 
-          <ProfileCourses />
+          <ProfileSkills skills={user.skills || []} />
+
+          <ProfileCourses title="Minhas insígnias" courses={myCourses} />
+
+          <ProfileProjects projects={user.projects || []} />
         </ProfileContentCard>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: "14px",
-            margin: "28px 0 50px",
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => navigate("/profile/edit")}
-            style={{
-              background: "#6f00ff",
-              color: "#ffffff",
-              border: "none",
-              padding: "14px 32px",
-              borderRadius: "10px",
-              cursor: "pointer",
-              fontWeight: "600",
-              fontSize: "16px",
-            }}
-          >
-            Editar Perfil
-          </button>
+        <ButtonRow>
+          <PrimaryButton type="button" onClick={() => navigate("/profile/edit")}>
+            Editar perfil
+          </PrimaryButton>
 
-          <button
-            type="button"
-            onClick={() => navigate("/feed")}
-            style={{
-              background: "transparent",
-              color: "#ffffff",
-              border: "2px solid #6f00ff",
-              padding: "12px 32px",
-              borderRadius: "10px",
-              cursor: "pointer",
-              fontWeight: "600",
-              fontSize: "16px",
-            }}
-          >
-            Voltar ao Feed
-          </button>
-        </div>
+          <SecondaryButton type="button" onClick={() => navigate("/feed")}>
+            Voltar ao feed
+          </SecondaryButton>
+        </ButtonRow>
       </Container>
 
       {selectedImage && (
-        <ImageViewer
-          image={selectedImage}
-          onClose={() => setSelectedImage(null)}
-        />
+        <ImageViewer image={selectedImage} onClose={() => setSelectedImage(null)} />
       )}
 
       {imageMenu && (
@@ -317,9 +238,7 @@ const Profile = () => {
         ref={avatarInputRef}
         style={{ display: "none" }}
         disabled={isSavingImage}
-        onChange={(event) =>
-          handleImageSelected(event, "avatar")
-        }
+        onChange={(event) => handleImageSelected(event, "avatar")}
       />
 
       <input
@@ -328,9 +247,7 @@ const Profile = () => {
         ref={coverInputRef}
         style={{ display: "none" }}
         disabled={isSavingImage}
-        onChange={(event) =>
-          handleImageSelected(event, "cover")
-        }
+        onChange={(event) => handleImageSelected(event, "cover")}
       />
     </>
   );

@@ -1,58 +1,58 @@
 import styled from "styled-components";
+import { theme, media } from "../../styles/theme";
 
 export const Header = styled.header`
-    width: 100%;
-    height: 80px;
+  width: 100%;
+  height: 72px;
 
-    background: #151515;
-    border-bottom: 1px solid #2C2C2C;
+  background: ${theme.colors.surface};
+  border-bottom: 1px solid ${theme.colors.border};
 
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 `;
 
 export const Container = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  width: 100%;
+  max-width: ${theme.layout.maxWidth};
 
-    padding: 0 40px;
-`;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-export const Logo = styled.img`
-    width: 105px;
-    cursor: pointer;
+  padding: 0 20px;
 
-    transition: .3s;
-
-    &:hover{
-        opacity:.8;
-    }
+  ${media.tablet} {
+    padding: 0 14px;
+  }
 `;
 
 export const BackButton = styled.button`
-     display: flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-    background:transparent;
-    border:none;
+  gap: 8px;
 
-    color:#BDBDBD;
+  padding: 8px 14px;
 
-    font-size:15px;
-    font-weight:600;
+  border: 1px solid transparent;
+  border-radius: ${theme.radius.pill};
 
-    cursor:pointer;
+  background: transparent;
+  color: ${theme.colors.textMuted};
 
-    transition:.3s;
+  font-size: 14px;
+  font-weight: 600;
 
-    svg{
-        font-size:16px;
-    }
+  cursor: pointer;
 
-    &:hover{
-        color:#00E676;
-    }
+  transition: 0.2s;
+
+  svg {
+    font-size: 15px;
+  }
+
+  &:hover {
+    color: ${theme.colors.primary};
+    border-color: ${theme.colors.border};
+  }
 `;

@@ -1,200 +1,180 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  FaBars,
-  FaSearch,
-  FaHome,
-  FaUser,
-  FaSignOutAlt,
-  FaTrash,
-} from "react-icons/fa";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FaBars, FaSearch } from "react-icons/fa";
+import { FiGlobe, FiPlayCircle, FiShield } from "react-icons/fi";
 
-import logo from "../../assets/logo-devconnect.png";
 import defaultAvatar from "../../assets/avatar-default.svg";
 
-import { api } from "../../services/api";
+import { Logo } from "../Logo";
+import { ProfileDrawer } from "../ProfileDrawer";
+import { useAuth } from "../../contexts/AuthContext";
 
 import {
   Container,
+  Spacer,
   Wrapper,
-  Logo,
+  Center,
+  MobileSearchRow,
   SearchContainer,
   Input,
   IconButton,
-  Menu,
+  Nav,
+  NavLink,
+  RightMenu,
+  AdminBadge,
   UserAvatar,
   MobileIcon,
-  Drawer,
-  DrawerOverlay,
-  DrawerHeader,
-  DrawerItem,
   LoginButton,
-  RightMenu,
 } from "./styles";
 
-const Header = ({
-  variant = "feed",
-  search = "",
-  setSearch = () => {},
-}) => {
+/*
+ * Header fixo da plataforma.
+ *
+ *  Desktop:  LOGO | BUSCAR | LIVE CODE | GLOBAL | PERFIL
+ *  Mobile:   LOGO                             PERFIL
+ *            BUSCAR CURSOS...
+ *
+ * Quando a página controla a busca (Feed, Cursos) ela passa
+ * `search`/`setSearch`. Em outras páginas a busca leva para o feed
+ * com o termo na URL (/feed?q=...).
+ */
+const Header = ({ variant = "feed", search = "", setSearch }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, isAdmin } = useAuth();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [localSearch, setLocalSearch] = useState("");
 
-  const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  const isControlled = typeof setSearch === "function";
+  const searchValue = isControlled ? search : localSearch;
+  const isLogged = Boolean(user);
+  const showSearch = variant === "feed" && isLogged;
 
-  const closeDrawerAndNavigate = (route) => {
-    setDrawerOpen(false);
-    navigate(route);
-  };
-
-  const handleSearch = () => {
-    if (!search.trim()) return;
-
-    console.log("Buscar:", search);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("loggedUser");
-    setDrawerOpen(false);
-    navigate("/login");
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!loggedUser?.id) {
-      alert("Não foi possível identificar o usuário.");
-      return;
-    }
-
-    const confirmed = window.confirm(
-      "Tem certeza de que deseja excluir sua conta? Essa ação não poderá ser desfeita."
-    );
-
-    if (!confirmed) return;
-
-    try {
-      await api.delete(`/users/${loggedUser.id}`);
-
-      localStorage.removeItem("loggedUser");
-      setDrawerOpen(false);
-
-      alert("Conta excluída com sucesso.");
-      navigate("/signup");
-    } catch (error) {
-      console.error("Erro ao excluir conta:", error);
-      alert("Não foi possível excluir a conta.");
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    if (isControlled) {
+      setSearch(value);
+    } else {
+      setLocalSearch(value);
     }
   };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    const term = searchValue.trim();
+
+    if (isControlled) return; // a própria página já filtra em tempo real
+
+    if (!term) return;
+    navigate(`/feed?q=${encodeURIComponent(term)}`);
+    setLocalSearch("");
+  };
+
+  const isActive = (path) => location.pathname.startsWith(path);
+
+  const renderSearch = (desktopOnly) => (
+    <SearchContainer
+      role="search"
+      onSubmit={handleSearchSubmit}
+      $desktopOnly={desktopOnly}
+    >
+      <Input
+        type="search"
+        placeholder={desktopOnly ? "Buscar cursos, posts, pessoas..." : "Buscar cursos..."}
+        value={searchValue}
+        onChange={handleSearchChange}
+        aria-label="Pesquisar"
+      />
+      <IconButton type="submit" aria-label="Pesquisar">
+        <FaSearch />
+      </IconButton>
+    </SearchContainer>
+  );
 
   return (
     <>
       <Container>
         <Wrapper>
-          <Logo
-            src={logo}
-            alt="Logo da plataforma"
-            onClick={() =>
-              navigate(loggedUser ? "/feed" : "/")
-            }
-          />
+          <Logo onClick={() => navigate(isLogged ? "/feed" : "/")} />
 
-          {variant === "feed" && (
-            <>
-              <SearchContainer>
-                <Input
-                  placeholder="Pesquisar..."
-                  value={search}
-                  onChange={(event) =>
-                    setSearch(event.target.value)
-                  }
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      handleSearch();
-                    }
-                  }}
-                />
+          <Center>
+            {showSearch && renderSearch(true)}
 
-                <IconButton
+            {isLogged && (
+              <Nav aria-label="Navegação principal">
+                <NavLink
                   type="button"
-                  onClick={handleSearch}
-                  aria-label="Pesquisar"
+                  $active={isActive("/courses")}
+                  onClick={() => navigate("/courses")}
                 >
-                  <FaSearch />
-                </IconButton>
-              </SearchContainer>
-           <RightMenu>
-  <UserAvatar
-    src={loggedUser?.avatar || defaultAvatar}
-    alt={loggedUser?.name || "Usuário"}
-    onClick={() => navigate("/profile")}
-  />
+                  <FiPlayCircle />
+                  Live Code
+                </NavLink>
 
-   <MobileIcon
-    type="button"
-    onClick={() => setDrawerOpen(true)}
-    aria-label="Abrir menu"
-    title="Menu"
-  >
-    <FaBars />
-  </MobileIcon>
-</RightMenu>
- </>
-)}
+                <NavLink
+                  type="button"
+                  $active={isActive("/feed")}
+                  onClick={() => navigate("/feed")}
+                >
+                  <FiGlobe />
+                  Global
+                </NavLink>
+              </Nav>
+            )}
+          </Center>
 
-          {variant === "home" && (
-            <Menu>
-              <LoginButton onClick={() => navigate("/login")}>
-                Entrar
-              </LoginButton>
-            </Menu>
-          )}
+          <RightMenu>
+            {isLogged ? (
+              <>
+                {isAdmin && (
+                  <AdminBadge type="button" onClick={() => navigate("/admin")}>
+                    <FiShield />
+                    Admin
+                  </AdminBadge>
+                )}
+
+                <UserAvatar
+                  type="button"
+                  onClick={() => setDrawerOpen(true)}
+                  aria-label="Abrir perfil"
+                  title={user.name}
+                >
+                  <img src={user.avatar || defaultAvatar} alt={user.name} />
+                </UserAvatar>
+
+                <MobileIcon
+                  type="button"
+                  onClick={() => setDrawerOpen(true)}
+                  aria-label="Abrir menu"
+                >
+                  <FaBars />
+                </MobileIcon>
+              </>
+            ) : (
+              <>
+                <LoginButton type="button" onClick={() => navigate("/login")}>
+                  Entrar
+                </LoginButton>
+                <LoginButton
+                  type="button"
+                  $primary
+                  onClick={() => navigate("/signup")}
+                >
+                  Criar conta
+                </LoginButton>
+              </>
+            )}
+          </RightMenu>
         </Wrapper>
+
+        {showSearch && <MobileSearchRow>{renderSearch(false)}</MobileSearchRow>}
       </Container>
 
-      {variant === "feed" && drawerOpen && (
-        <DrawerOverlay
-          onClick={() => setDrawerOpen(false)}
-        >
-          <Drawer onClick={(event) => event.stopPropagation()}>
-            <DrawerHeader>
-              <h3>Menu</h3>
-            </DrawerHeader>
+      <Spacer $compact={!showSearch} />
 
-            <DrawerItem
-              onClick={() =>
-                closeDrawerAndNavigate("/feed")
-              }
-            >
-              <FaHome />
-              <span>Feed</span>
-            </DrawerItem>
-
-            <DrawerItem
-              onClick={() =>
-                closeDrawerAndNavigate("/profile")
-              }
-            >
-              <FaUser />
-              <span>Perfil</span>
-            </DrawerItem>
-
-            <DrawerItem onClick={handleLogout}>
-              <FaSignOutAlt />
-              <span>Sair da conta</span>
-            </DrawerItem>
-
-            <DrawerItem
-              onClick={handleDeleteAccount}
-              style={{
-                color: "#ff5c5c",
-                fontWeight: "700",
-              }}
-            >
-              <FaTrash />
-              <span>Excluir conta</span>
-            </DrawerItem>
-          </Drawer>
-        </DrawerOverlay>
+      {isLogged && (
+        <ProfileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
       )}
     </>
   );

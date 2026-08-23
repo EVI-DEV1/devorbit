@@ -1,89 +1,113 @@
 import styled from "styled-components";
+import { theme, media } from "../../styles/theme";
+
+const { colors } = theme;
 
 export const Container = styled.div`
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 20px;
+  max-width: ${theme.layout.maxWidth};
+
+  margin: 24px auto;
+  padding: 0 20px;
+
+  ${media.tablet} {
+    padding: 0 14px;
+  }
 `;
 
-export const Cover = styled.div`
-  height: 280px;
-  border-radius: 20px;
-
-  background-image: ${({ image }) => `url(${image})`};
-  background-size: cover;
-  background-position: center;
-`;
-
-export const Avatar = styled.img`
-  width: 180px;
-  height: 180px;
-
-  border-radius: 50%;
-
-  margin: -90px auto 20px;
-
-  display: block;
-
-  border: 6px solid #161b22;
-
-  object-fit: cover;
-`;
-
-export const ProfileInfo = styled.div`
-  text-align: center;
-`;
-
-export const Name = styled.h1`
-  color: white;
-`;
-
-export const Bio = styled.p`
-  color: #AAA;
-  margin-top: 10px;
-`;
-
-export const Button = styled.button`
-  margin-top: 20px;
-`;
-
-export const Stats = styled.div`
-  margin-top: 40px;
-
-  display: grid;
-
-  grid-template-columns: repeat(4,1fr);
-
-  gap:20px;
-`;
-
-export const StatCard = styled.div`
-  background:#1E1E2E;
-
-  padding:30px;
-
-  border-radius:16px;
-
-  text-align:center;
-
-  color:white;
-`;
 export const ProfileContentCard = styled.div`
   width: 100%;
   max-width: 900px;
 
   margin: 8px auto 0;
-
-  background: #202024;
-  border: 1px solid #2f2f35;
-  border-radius: 18px;
-
   padding: 28px;
 
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  background: ${colors.surface};
+  border: 1px solid ${colors.border};
+  border-radius: ${theme.radius.lg};
 
-  @media (max-width: 768px) {
+  box-shadow: ${theme.shadow.card};
+
+  ${media.tablet} {
+    padding: 20px 16px;
+  }
+`;
+
+export const AdminTag = styled.span`
+  display: inline-block;
+
+  margin-bottom: 14px;
+  padding: 5px 12px;
+
+  border: 1px solid ${colors.accent};
+  border-radius: ${theme.radius.pill};
+
+  background: ${colors.accentSoft};
+  color: #c4b5fd;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+`;
+
+export const Bio = styled.p`
+  margin-bottom: 18px;
+
+  color: ${colors.textMuted};
+  line-height: 1.6;
+`;
+
+export const Location = styled.p`
+  margin-bottom: 14px;
+
+  color: ${colors.textMuted};
+  font-size: 15px;
+`;
+
+export const ButtonRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+
+  margin: 28px 0 50px;
+`;
+
+export const PrimaryButton = styled.button`
+  min-width: 180px;
+
+  padding: 13px 32px;
+
+  border: 1px solid ${colors.primary};
+  border-radius: ${theme.radius.md};
+
+  background: ${colors.primary};
+  color: ${colors.background};
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  &:hover {
+    box-shadow: ${theme.shadow.glow};
+  }
+
+  ${media.mobile} {
     width: 100%;
-    padding: 20px;
+  }
+`;
+
+export const SecondaryButton = styled(PrimaryButton)`
+  background: transparent;
+  color: ${colors.text};
+  border-color: ${colors.borderStrong};
+
+  &:hover {
+    border-color: ${colors.primary};
+    color: ${colors.primary};
+    box-shadow: none;
   }
 `;

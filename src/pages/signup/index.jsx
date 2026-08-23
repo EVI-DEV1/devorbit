@@ -1,103 +1,139 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MdEmail, MdLock, MdPerson } from 'react-icons/md'
-import { Button } from '../../components/Button';
-import { AuthHeader } from "../../components/AuthHeader";
-import { Input } from '../../components/Input';
-import { api } from '../../services/api';
-
+import { MdEmail, MdLock, MdPerson } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
-import { Container, Title, Column, TitleLogin, SubtitleLogin, EsqueciText, Row, Wrapper } from './styles';
+import { Button } from "../../components/Button";
+import { AuthHeader } from "../../components/AuthHeader";
+import { Input } from "../../components/Input";
+import { useAuth } from "../../contexts/AuthContext";
+import { emailRules, passwordRules, nameRules } from "../../utils/validation";
 
+import {
+  Container,
+  Title,
+  Column,
+  TitleLogin,
+  SubtitleLogin,
+  EsqueciText,
+  Row,
+  Wrapper,
+  FormError,
+} from "../login/styles";
 
 const Signup = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { signup, isAuthenticated } = useAuth();
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
-        reValidateMode: 'onChange',
-        mode: 'onChange',
-    });
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState("");
 
-    const onSubmit = async (formData) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    reValidateMode: "onChange",
+    mode: "onChange",
+  });
 
-   if (!formData.name || !formData.email || !formData.senha) {
-    alert('Preencha todos os campos');
-    return;
-}
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/feed", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
-if (formData.name.length < 3) {
-    alert('O nome deve ter pelo menos 3 caracteres');
-    return;
-}
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-if (!emailRegex.test(formData.email)) {
-    alert('Digite um e-mail válido');
-    return;
-}
-
-if (formData.senha.length < 6) {
-    alert('A senha deve ter no mínimo 6 caracteres');
-    return;
-}
+  const onSubmit = async (formData) => {
+    setFormError("");
+    setLoading(true);
 
     try {
-        const { data: existingUsers } = await api.get(
-            `/users?email=${formData.email}`
-        );
+      const result = await signup(formData);
 
+      if (result.ok) {
+        // Já entra logado: não faz sentido pedir a senha de novo logo após o cadastro.
+        navigate("/feed", { replace: true });
+        return;
+      }
 
-            if (existingUsers.length > 0) {
-                alert('Este e-mail já está cadastrado')
-                return
-            }
+      setFormError(result.message);
+    } catch (error) {
+      console.error("Erro ao criar conta:", error);
+      setFormError("Não foi possível criar a conta. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-         const { data: newUser } = await api.post('/users', {
-    name: formData.name,
-    email: formData.email,
-    senha: formData.senha
-});
-
-if (newUser.id) {
-    navigate('/login');
-    return;
-}
-} catch (e) {
-    console.error("Erro completo:", e);
-    console.error("Response:", e.response);
-    alert(`Erro: ${e.message}`);
-}
-    };
-    return (<>
-       
-    <AuthHeader />
-        <Container>
-            <Column>
+  return (
+    <>
+      <AuthHeader />
+      <Container>
+        <Column>
           <Title>
-  Comece sua jornada na programação e desenvolva habilidades para conquistar novas oportunidades.
+            Comece sua jornada na programação e desenvolva habilidades para{" "}
+            <span>conquistar novas oportunidades</span>.
           </Title>
-            </Column>
-            <Column>
-                <Wrapper>
-                    <TitleLogin>Crie sua conta</TitleLogin>
-                    <SubtitleLogin> Preencha seus dados para criar sua conta gratuitamente.</SubtitleLogin>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Input placeholder="Nome Completo" leftIcon={<MdPerson />} name="name" control={control} />
-                        {errors.name && <span>Nome é obrigatório</span>}
-                        <Input placeholder="E-mail" leftIcon={<MdEmail />} name="email" control={control} />
-                        {errors.email && <span>E-mail é obrigatório</span>}
-                        <Input type="password" placeholder="Senha" leftIcon={<MdLock />} name="senha" control={control} />
-                        {errors.senha && <span>Senha é obrigatório</span>}
-                        <Button title="Criar Conta" variant="secondary" type="submit" />
-                    </form>
-                    <Row>
-                        <EsqueciText onClick={() => navigate('/login')}>Voltar ao login</EsqueciText>
-                    </Row>
-                </Wrapper>
-            </Column>
-        </Container>
-    </>)
-}
+        </Column>
+
+        <Column>
+          <Wrapper>
+            <TitleLogin>Crie sua conta</TitleLogin>
+            <SubtitleLogin>
+              Preencha seus dados para criar sua conta gratuitamente.
+            </SubtitleLogin>
+
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Input
+                placeholder="Nome completo"
+                leftIcon={<MdPerson />}
+                name="name"
+                control={control}
+                rules={nameRules}
+                errorMessage={errors.name?.message}
+                autoComplete="name"
+              />
+              <Input
+                type="email"
+                placeholder="E-mail"
+                leftIcon={<MdEmail />}
+                name="email"
+                control={control}
+                rules={emailRules}
+                errorMessage={errors.email?.message}
+                autoComplete="email"
+              />
+              <Input
+                type="password"
+                placeholder="Senha"
+                leftIcon={<MdLock />}
+                name="senha"
+                control={control}
+                rules={passwordRules}
+                errorMessage={errors.senha?.message}
+                autoComplete="new-password"
+              />
+
+              {formError && <FormError role="alert">{formError}</FormError>}
+
+              <Button
+                title={loading ? "Criando conta..." : "Criar conta"}
+                variant="secondary"
+                type="submit"
+                disabled={loading}
+              />
+            </form>
+
+            <Row>
+              <EsqueciText onClick={() => navigate("/login")}>
+                Já tenho conta — voltar ao login
+              </EsqueciText>
+            </Row>
+          </Wrapper>
+        </Column>
+      </Container>
+    </>
+  );
+};
 
 export default Signup;

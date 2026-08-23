@@ -2,16 +2,705 @@
   "users": [
     {
       "id": 1,
-      "name": "Administrador",
-      "email": "admin@dio.com",
+      "name": "Evi Vitoriano",
+      "email": "eviofc4@gmail.com",
       "senha": "123456",
-      "role": "admin"
+      "role": "admin",
+      "avatar": "/avatars/evi.jpg",
+      "profession": "Administradora da plataforma",
+      "bio": "Responsável por manter a comunidade DevOrbit organizada e cheia de conteúdo.",
+      "xp": 9800,
+      "weeklyScore": 0,
+      "progress": {
+        "1": 100,
+        "4": 100,
+        "6": 60
+      },
+      "projects": [
+        {
+          "name": "DevOrbit",
+          "description": "Plataforma de comunidade para desenvolvedores."
+        }
+      ],
+      "skills": [
+        "React",
+        "Node.js",
+        "Gestão"
+      ],
+      "createdAt": "2026-01-10T12:00:00.000Z"
     },
     {
-      "name": "evi",
-      "email": "eviofc4@gmail.com",
-      "senha": "19922012",
-      "id": 2
+      "id": 3,
+      "name": "Pablo Henrique",
+      "email": "pablo@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
+      "profession": "Engenheiro Frontend",
+      "bio": "Apaixonado por React e por ensinar.",
+      "xp": 7200,
+      "weeklyScore": 78,
+      "progress": {
+        "1": 100,
+        "4": 100,
+        "9": 100
+      },
+      "projects": [
+        {
+          "name": "UI Kit Orbit",
+          "description": "Biblioteca de componentes React."
+        }
+      ],
+      "skills": [
+        "React",
+        "TypeScript",
+        "Node.js"
+      ],
+      "createdAt": "2026-02-01T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "Mariana Lima",
+      "email": "mariana@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
+      "profession": "Desenvolvedora Web",
+      "bio": "HTML semântico e acessibilidade em primeiro lugar.",
+      "xp": 5400,
+      "weeklyScore": 65,
+      "progress": {
+        "2": 100,
+        "3": 100,
+        "4": 55
+      },
+      "projects": [],
+      "skills": [
+        "HTML5",
+        "CSS3",
+        "Acessibilidade"
+      ],
+      "createdAt": "2026-02-03T10:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "João Victor",
+      "email": "joao@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/men/51.jpg",
+      "profession": "UI Developer",
+      "bio": "CSS é arte.",
+      "xp": 4800,
+      "weeklyScore": 52,
+      "progress": {
+        "1": 40,
+        "3": 100
+      },
+      "projects": [],
+      "skills": [
+        "CSS3",
+        "Sass",
+        "Figma"
+      ],
+      "createdAt": "2026-02-05T10:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "name": "Fernanda Souza",
+      "email": "fernanda@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/women/63.jpg",
+      "profession": "Desenvolvedora Full Stack",
+      "bio": "JavaScript do front ao back.",
+      "xp": 6100,
+      "weeklyScore": 70,
+      "progress": {
+        "4": 100,
+        "9": 80
+      },
+      "projects": [],
+      "skills": [
+        "JavaScript",
+        "Node.js",
+        "MongoDB"
+      ],
+      "createdAt": "2026-02-08T10:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "name": "Lucas Oliveira",
+      "email": "lucas@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/men/77.jpg",
+      "profession": "Professor de Programação",
+      "bio": "Ensinando lógica para quem está começando.",
+      "xp": 3900,
+      "weeklyScore": 44,
+      "progress": {
+        "5": 100
+      },
+      "projects": [],
+      "skills": [
+        "Lógica",
+        "Algoritmos",
+        "Python"
+      ],
+      "createdAt": "2026-02-10T10:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "name": "Amanda Costa",
+      "email": "amanda@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/women/68.jpg",
+      "profession": "Engenheira de Dados",
+      "bio": "Automação e dados com Python.",
+      "xp": 6800,
+      "weeklyScore": 61,
+      "progress": {
+        "6": 100,
+        "8": 100
+      },
+      "projects": [],
+      "skills": [
+        "Python",
+        "SQL",
+        "Pandas"
+      ],
+      "createdAt": "2026-02-12T10:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "name": "Carlos Henrique",
+      "email": "carlos@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/men/18.jpg",
+      "profession": "Desenvolvedor Java",
+      "bio": "POO, Spring e arquitetura.",
+      "xp": 5900,
+      "weeklyScore": 48,
+      "progress": {
+        "7": 100,
+        "8": 70
+      },
+      "projects": [],
+      "skills": [
+        "Java",
+        "Spring",
+        "POO"
+      ],
+      "createdAt": "2026-02-14T10:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "name": "Beatriz Martins",
+      "email": "beatriz.martins@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/women/28.jpg",
+      "profession": "DBA",
+      "bio": "Banco de dados bem modelado é metade do caminho.",
+      "xp": 5200,
+      "weeklyScore": 57,
+      "progress": {
+        "8": 100
+      },
+      "projects": [],
+      "skills": [
+        "MySQL",
+        "PostgreSQL",
+        "Modelagem"
+      ],
+      "createdAt": "2026-02-16T10:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "name": "Isabela Martins",
+      "email": "isabela@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/women/12.jpg",
+      "profession": "Desenvolvedora Frontend",
+      "bio": "Estudando todos os dias.",
+      "xp": 4100,
+      "weeklyScore": 97,
+      "progress": {
+        "1": 95,
+        "3": 100,
+        "4": 90
+      },
+      "projects": [],
+      "skills": [
+        "React",
+        "CSS3"
+      ],
+      "createdAt": "2026-03-01T10:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "name": "Gabriel Costa",
+      "email": "gabriel@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/men/41.jpg",
+      "profession": "Estudante de Engenharia",
+      "bio": "",
+      "xp": 3700,
+      "weeklyScore": 94,
+      "progress": {
+        "4": 100,
+        "6": 80
+      },
+      "projects": [],
+      "skills": [
+        "JavaScript",
+        "Python"
+      ],
+      "createdAt": "2026-03-02T10:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "name": "Amanda Ferreira",
+      "email": "amanda.ferreira@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/women/57.jpg",
+      "profession": "Analista de Sistemas",
+      "bio": "",
+      "xp": 3300,
+      "weeklyScore": 91,
+      "progress": {
+        "5": 100,
+        "7": 60
+      },
+      "projects": [],
+      "skills": [
+        "Java",
+        "SQL"
+      ],
+      "createdAt": "2026-03-03T10:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "name": "Rafael Lima",
+      "email": "rafael@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/men/64.jpg",
+      "profession": "Desenvolvedor Mobile",
+      "bio": "",
+      "xp": 2900,
+      "weeklyScore": 88,
+      "progress": {
+        "1": 70,
+        "4": 85
+      },
+      "projects": [],
+      "skills": [
+        "React Native",
+        "JavaScript"
+      ],
+      "createdAt": "2026-03-04T10:00:00.000Z"
+    },
+    {
+      "id": 15,
+      "name": "Beatriz Rocha",
+      "email": "beatriz.rocha@devorbit.dev",
+      "senha": "123456",
+      "role": "user",
+      "avatar": "https://randomuser.me/api/portraits/women/90.jpg",
+      "profession": "QA Engineer",
+      "bio": "",
+      "xp": 2600,
+      "weeklyScore": 84,
+      "progress": {
+        "2": 100,
+        "3": 75
+      },
+      "projects": [],
+      "skills": [
+        "Testes",
+        "JavaScript"
+      ],
+      "createdAt": "2026-03-05T10:00:00.000Z"
+    }
+  ],
+  "courses": [
+    {
+      "id": 1,
+      "name": "React",
+      "bannerKey": "react",
+      "description": "Aprenda os principais conceitos do React: componentes, Hooks, rotas, consumo de APIs e boas práticas para aplicações modernas.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Frontend",
+      "tags": [
+        "React",
+        "JavaScript",
+        "Frontend"
+      ],
+      "level": "Intermediário",
+      "status": "Publicado",
+      "duration": "24h",
+      "lessons": 48,
+      "url": "https://www.youtube.com/watch?v=1LhX2u6_BJE&list=PLx4x_zx8csUh752BVDGZkxYpY9lS40fyC&index=1"
+    },
+    {
+      "id": 2,
+      "name": "HTML5",
+      "bannerKey": "html",
+      "description": "Estruture páginas semânticas e acessíveis dominando as principais tags do HTML5.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Fundamentos",
+      "tags": [
+        "HTML5",
+        "Semântica",
+        "Acessibilidade"
+      ],
+      "level": "Iniciante",
+      "status": "Publicado",
+      "duration": "8h",
+      "lessons": 20,
+      "url": "https://www.youtube.com/playlist?list=PLx4x_zx8csUh752BVDGZkxYpY9lS40fyC"
+    },
+    {
+      "id": 3,
+      "name": "CSS3",
+      "bannerKey": "css",
+      "description": "Crie layouts profissionais e responsivos com Flexbox, Grid, animações e Media Queries.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Frontend",
+      "tags": [
+        "CSS3",
+        "Flexbox",
+        "Grid"
+      ],
+      "level": "Iniciante",
+      "status": "Publicado",
+      "duration": "12h",
+      "lessons": 30,
+      "url": "https://www.youtube.com/playlist?list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n"
+    },
+    {
+      "id": 4,
+      "name": "JavaScript",
+      "bannerKey": "javascript",
+      "description": "Domine a linguagem da web: funções, objetos, arrays, promises, async/await e manipulação do DOM.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Frontend",
+      "tags": [
+        "JavaScript",
+        "ES6",
+        "DOM"
+      ],
+      "level": "Intermediário",
+      "status": "Publicado",
+      "duration": "30h",
+      "lessons": 60,
+      "url": "https://www.youtube.com/playlist?list=PLHz_AreHm4dlsK3Nr9GVvXCbpQyHQl1o1"
+    },
+    {
+      "id": 5,
+      "name": "Lógica de Programação",
+      "bannerKey": "programacao",
+      "description": "Algoritmos, estruturas de decisão, repetição e funções com exercícios práticos para quem está começando.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Fundamentos",
+      "tags": [
+        "Lógica",
+        "Algoritmos",
+        "Programação"
+      ],
+      "level": "Iniciante",
+      "status": "Publicado",
+      "duration": "16h",
+      "lessons": 36,
+      "url": "https://www.youtube.com/playlist?list=PLHz_AreHm4dmSj0MHol_aoNYCSGFqvfXV"
+    },
+    {
+      "id": 6,
+      "name": "Python",
+      "bannerKey": "python",
+      "description": "Lógica, listas, dicionários, funções e automações do dia a dia utilizando Python.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Backend",
+      "tags": [
+        "Python",
+        "Automação",
+        "Backend"
+      ],
+      "level": "Iniciante",
+      "status": "Publicado",
+      "duration": "20h",
+      "lessons": 45,
+      "url": "https://www.youtube.com/playlist?list=PLHz_AreHm4dlKP6QQCekuIPky1CiwmdI6"
+    },
+    {
+      "id": 7,
+      "name": "Java Orientado a Objetos",
+      "bannerKey": "java",
+      "description": "Construa aplicações robustas aplicando os pilares da Programação Orientada a Objetos em Java.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Backend",
+      "tags": [
+        "Java",
+        "POO",
+        "Backend"
+      ],
+      "level": "Avançado",
+      "status": "Publicado",
+      "duration": "28h",
+      "lessons": 52,
+      "url": "https://www.youtube.com/playlist?list=PLHz_AreHm4dkI2ZdjTwZA4mPMxWTfNSpR"
+    },
+    {
+      "id": 8,
+      "name": "Banco de Dados e SQL",
+      "bannerKey": "mysql",
+      "description": "Modelagem, consultas, relacionamentos e boas práticas com MySQL.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Banco de Dados",
+      "tags": [
+        "MySQL",
+        "SQL",
+        "Modelagem"
+      ],
+      "level": "Intermediário",
+      "status": "Publicado",
+      "duration": "14h",
+      "lessons": 32,
+      "url": "https://www.youtube.com/playlist?list=PLHz_AreHm4dkBs-795Dsgvau_ekxg8g1r"
+    },
+    {
+      "id": 9,
+      "name": "Node.js",
+      "bannerKey": "node",
+      "description": "APIs REST com Node.js e Express, autenticação, middlewares e integração com banco de dados.",
+      "author": "Evi Vitoriano",
+      "authorAvatar": "/avatars/evi.jpg",
+      "category": "Backend",
+      "tags": [
+        "Node.js",
+        "Express",
+        "API"
+      ],
+      "level": "Intermediário",
+      "status": "Em breve",
+      "duration": "22h",
+      "lessons": 40,
+      "url": ""
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "userId": 1,
+      "user": "Evi Vitoriano",
+      "avatar": "/avatars/evi.jpg",
+      "bannerKey": "react",
+      "createdAt": "2026-08-23T19:42:57.776Z",
+      "title": "Criando aplicações modernas e escaláveis com React",
+      "description": "Aprenda componentização, Hooks, rotas e consumo de APIs criando projetos reais.",
+      "likes": 182,
+      "comments": 38,
+      "tags": [
+        "React",
+        "Hooks",
+        "JavaScript"
+      ],
+      "likedBy": [],
+      "savedBy": [],
+      "commentsList": [
+        {
+          "id": 101,
+          "userId": "4",
+          "user": "Mariana Lima",
+          "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
+          "text": "Excelente conteúdo! A parte de Hooks ficou muito clara.",
+          "createdAt": "2026-08-23T19:46:13.304Z"
+        }
+      ],
+      "subscribers": 15,
+      "subscribedBy": [
+        "2"
+      ],
+      "courseId": 1,
+      "courseUrl": "https://www.youtube.com/watch?v=1LhX2u6_BJE&list=PLx4x_zx8csUh752BVDGZkxYpY9lS40fyC&index=1"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "user": "Evi Vitoriano",
+      "avatar": "/avatars/evi.jpg",
+      "bannerKey": "html",
+      "createdAt": "2026-08-23T19:02:57.777Z",
+      "title": "Estruture páginas com semântica usando HTML5",
+      "description": "Aprenda a utilizar as principais tags semânticas para criar páginas acessíveis e bem organizadas.",
+      "likes": 143,
+      "comments": 26,
+      "tags": [
+        "HTML5",
+        "Semântica"
+      ],
+      "likedBy": [],
+      "savedBy": [],
+      "commentsList": [],
+      "subscribers": 15,
+      "subscribedBy": [],
+      "courseId": 2,
+      "courseUrl": "https://www.youtube.com/playlist?list=PLx4x_zx8csUh752BVDGZkxYpY9lS40fyC"
+    },
+    {
+      "id": 3,
+      "userId": 1,
+      "user": "Evi Vitoriano",
+      "avatar": "/avatars/evi.jpg",
+      "bannerKey": "css",
+      "createdAt": "2026-08-23T18:17:57.777Z",
+      "title": "Estilize e crie layouts responsivos com CSS3",
+      "description": "Crie layouts profissionais e responsivos utilizando Flexbox, Grid e Media Queries.",
+      "likes": 211,
+      "comments": 42,
+      "tags": [
+        "CSS3",
+        "Flexbox",
+        "Grid"
+      ],
+      "likedBy": [],
+      "savedBy": [],
+      "commentsList": [],
+      "subscribers": 12,
+      "subscribedBy": [],
+      "courseId": 3,
+      "courseUrl": "https://www.youtube.com/playlist?list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n"
+    },
+    {
+      "id": 4,
+      "userId": 1,
+      "user": "Evi Vitoriano",
+      "avatar": "/avatars/evi.jpg",
+      "bannerKey": "javascript",
+      "createdAt": "2026-08-23T17:47:57.777Z",
+      "title": "Programe com lógica e interatividade usando JavaScript",
+      "description": "Domine funções, objetos, arrays, promises e async/await.",
+      "likes": 320,
+      "comments": 81,
+      "tags": [
+        "JavaScript",
+        "ES6"
+      ],
+      "likedBy": [],
+      "savedBy": [],
+      "commentsList": [],
+      "subscribers": 5,
+      "subscribedBy": [],
+      "courseId": 4,
+      "courseUrl": "https://www.youtube.com/playlist?list=PLHz_AreHm4dlsK3Nr9GVvXCbpQyHQl1o1"
+    },
+    {
+      "id": 5,
+      "userId": 1,
+      "user": "Evi Vitoriano",
+      "avatar": "/avatars/evi.jpg",
+      "bannerKey": "programacao",
+      "createdAt": "2026-08-23T16:47:57.777Z",
+      "title": "Algoritmos e Lógica de Programação",
+      "description": "Aprenda algoritmos, lógica de programação, estruturas de decisão, repetição e funções com exercícios práticos.",
+      "likes": 275,
+      "comments": 59,
+      "tags": [
+        "Lógica",
+        "Algoritmos",
+        "Programação"
+      ],
+      "likedBy": [],
+      "savedBy": [],
+      "commentsList": [],
+      "subscribers": 18,
+      "subscribedBy": [],
+      "courseId": 5,
+      "courseUrl": "https://www.youtube.com/playlist?list=PLHz_AreHm4dmSj0MHol_aoNYCSGFqvfXV"
+    },
+    {
+      "id": 6,
+      "userId": 1,
+      "user": "Evi Vitoriano",
+      "avatar": "/avatars/evi.jpg",
+      "bannerKey": "python",
+      "createdAt": "2026-08-23T15:47:57.777Z",
+      "title": "Aprenda lógica, automação e desenvolvimento com Python",
+      "description": "Aprenda lógica, listas, dicionários, funções e automações utilizando Python.",
+      "likes": 410,
+      "comments": 97,
+      "tags": [
+        "Python",
+        "Automação"
+      ],
+      "likedBy": [],
+      "savedBy": [],
+      "commentsList": [],
+      "subscribers": 15,
+      "subscribedBy": [],
+      "courseId": 6,
+      "courseUrl": "https://www.youtube.com/playlist?list=PLHz_AreHm4dlKP6QQCekuIPky1CiwmdI6"
+    },
+    {
+      "id": 7,
+      "userId": 1,
+      "user": "Evi Vitoriano",
+      "avatar": "/avatars/evi.jpg",
+      "bannerKey": "java",
+      "createdAt": "2026-08-23T14:47:57.777Z",
+      "title": "Java Orientado a Objetos",
+      "description": "Construa aplicações robustas utilizando os pilares da Programação Orientada a Objetos.",
+      "likes": 267,
+      "comments": 54,
+      "tags": [
+        "Java",
+        "POO"
+      ],
+      "likedBy": [],
+      "savedBy": [],
+      "commentsList": [],
+      "subscribers": 28,
+      "subscribedBy": [],
+      "courseId": 7,
+      "courseUrl": "https://www.youtube.com/playlist?list=PLHz_AreHm4dkI2ZdjTwZA4mPMxWTfNSpR"
+    },
+    {
+      "id": 8,
+      "userId": 1,
+      "user": "Evi Vitoriano",
+      "avatar": "/avatars/evi.jpg",
+      "bannerKey": "mysql",
+      "createdAt": "2026-08-23T13:48:13.305Z",
+      "title": "Banco de Dados e Consultas SQL",
+      "description": "Aprenda modelagem de banco de dados, SQL, consultas, relacionamentos e boas práticas.",
+      "likes": 198,
+      "comments": 41,
+      "tags": [
+        "MySQL",
+        "SQL"
+      ],
+      "likedBy": [],
+      "savedBy": [],
+      "commentsList": [],
+      "subscribers": 25,
+      "subscribedBy": [],
+      "courseId": 8,
+      "courseUrl": "https://www.youtube.com/playlist?list=PLHz_AreHm4dkBs-795Dsgvau_ekxg8g1r"
     }
   ]
 }

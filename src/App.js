@@ -1,31 +1,24 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
-import EditProfile from "./pages/EditProfile";
-import Login from './pages/login'
-import Signup from './pages/signup'
-import Feed from './pages/feed'
-import Home from './pages/home'
-import ForgotPassword from './pages/ForgotPassword'
-import Profile from "./pages/Profile";
-import { GlobalStyle } from './styles/global';
+import { BrowserRouter as Router } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+
+import { AppRoutes } from "./routes";
+import { DataProvider } from "./contexts/DataContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { GlobalStyle } from "./styles/global";
+import { theme } from "./styles/theme";
 
 function App() {
   return (
-    <Router>
+    <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/feed" element={<Feed />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/edit" element={<EditProfile />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-      </Routes>
-    </Router>
+      <DataProvider>
+        <AuthProvider>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </AuthProvider>
+      </DataProvider>
+    </ThemeProvider>
   );
 }
 

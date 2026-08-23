@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 import bannerImage from "../../assets/banner.png";
 import { Button } from "../../components/Button";
@@ -10,6 +11,7 @@ import {
   Title,
   TitleHighlight,
   TextContent,
+  HeroActions,
   TechContainer,
   Tech,
   StatsSection,
@@ -32,9 +34,10 @@ import {
 
 const Home = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const handleClickSignIn = () => {
-    navigate("/login");
+    navigate(isAuthenticated ? "/feed" : "/login");
   };
 
   return (
@@ -56,11 +59,13 @@ const Home = () => {
            compartilhe conhecimento e evolua junto com a comunidade.
           </TextContent>
 
-          <Button
-            title="Começar agora"
-            variant="secondary"
-            onClick={handleClickSignIn}
-          />
+          <HeroActions>
+            <Button
+              title="Começar agora"
+              variant="secondary"
+              onClick={handleClickSignIn}
+            />
+          </HeroActions>
 
           <TechContainer>
             <Tech>
@@ -101,12 +106,7 @@ const Home = () => {
         </div>
 
         <div>
-        <Banner
-  src={bannerImage}
-  alt="Imagem principal"
-/>
-       
-
+          <Banner src={bannerImage} alt="Desenvolvedores colaborando" />
         </div>
       </Container>
       <StatsSection>

@@ -262,3 +262,25 @@ export const Label = styled.label`
   font-size: 14px;
   font-weight: 700;
 `;
+export const Select = styled.select`
+  width: 100%;
+
+  padding: 14px 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+
+  background: #17131f;
+  color: #ffffff;
+
+  outline: none;
+  cursor: pointer;
+
+  &:focus {
+    border-color: #00e676;
+  }
+
+  option {
+    background: #17131f;
+  }
+`;

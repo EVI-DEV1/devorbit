@@ -29,11 +29,12 @@ import {
   HelperText,
   FieldGroup,
   Label,
+  Select,
 } from "./styles";
 
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
-const CreatePost = ({ user, onCreate }) => {
+const CreatePost = ({ user, onCreate, courses = [] }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -41,9 +42,27 @@ const CreatePost = ({ user, onCreate }) => {
     description: "",
     tags: "",
     courseUrl: "",
+    courseId: "",
   });
 
   const [image, setImage] = useState("");
+
+  const linkedCourse = courses.find(
+    (course) => String(course.id) === String(formData.courseId)
+  );
+
+  // Ao vincular um curso, sugere link e tags a partir dele.
+  const handleCourseChange = (event) => {
+    const courseId = event.target.value;
+    const course = courses.find((item) => String(item.id) === courseId);
+
+    setFormData((currentData) => ({
+      ...currentData,
+      courseId,
+      courseUrl: currentData.courseUrl || course?.url || "",
+      tags: currentData.tags || (course?.tags || []).join(", "),
+    }));
+  };
 
   const imageInputRef = useRef(null);
 
@@ -105,6 +124,7 @@ const CreatePost = ({ user, onCreate }) => {
       description: "",
       tags: "",
       courseUrl: "",
+      courseId: "",
     });
 
     setImage("");
@@ -143,7 +163,9 @@ const CreatePost = ({ user, onCreate }) => {
       description: formData.description.trim(),
       tags,
       banner: image,
+      bannerKey: !image && linkedCourse ? linkedCourse.bannerKey : "",
       courseUrl: formData.courseUrl.trim(),
+      courseId: linkedCourse ? linkedCourse.id : null,
     });
 
     resetForm();
@@ -230,6 +252,31 @@ const CreatePost = ({ user, onCreate }) => {
               onChange={handleChange}
             />
           </FieldGroup>
+
+          {courses.length > 0 && (
+            <FieldGroup>
+              <Label htmlFor="post-course">Curso vinculado (opcional)</Label>
+
+              <Select
+                id="post-course"
+                name="courseId"
+                value={formData.courseId}
+                onChange={handleCourseChange}
+              >
+                <option value="">Nenhum — publicação livre</option>
+                {courses.map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {course.name} · {course.category}
+                  </option>
+                ))}
+              </Select>
+
+              <HelperText>
+                Inscrições nesta publicação matriculam o usuário no curso e, sem capa
+                própria, o banner do curso é usado.
+              </HelperText>
+            </FieldGroup>
+          )}
 
           <FieldGroup>
             <Label htmlFor="course-url">

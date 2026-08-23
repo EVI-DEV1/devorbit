@@ -1,86 +1,144 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MdEmail, MdLock } from 'react-icons/md'
-import { Button } from '../../components/Button';
-import { Header } from '../../components/Header';
-import { Input } from '../../components/Input';
-import { api } from '../../services/api';
-
+import { MdEmail, MdLock } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
-import { Container, Title, Column, TitleLogin, SubtitleLogin, EsqueciText, Row, Wrapper } from './styles';
+import { Button } from "../../components/Button";
+import { AuthHeader } from "../../components/AuthHeader";
+import { Input } from "../../components/Input";
+import { useAuth } from "../../contexts/AuthContext";
+import { emailRules, passwordRules } from "../../utils/validation";
+
+import {
+  Container,
+  Title,
+  Column,
+  TitleLogin,
+  SubtitleLogin,
+  EsqueciText,
+  Row,
+  Wrapper,
+  FormError,
+  FormSuccess,
+} from "../login/styles";
 
 const ForgotPassword = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { resetPassword } = useAuth();
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
-        reValidateMode: 'onChange',
-        mode: 'onChange',
-    });
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [success, setSuccess] = useState(false);
 
-    const onSubmit = async (formData) => {
-        if (!formData.email || !formData.senha || !formData.confirmSenha) {
-            alert('Preencha todos os campos');
-            return;
-        }
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    reValidateMode: "onChange",
+    mode: "onChange",
+  });
 
-        if (formData.senha.length < 6) {
-            alert('A senha deve ter no mínimo 6 caracteres');
-            return;
-        }
+  const senha = watch("senha");
 
-        if (formData.senha !== formData.confirmSenha) {
-            alert('As senhas não coincidem');
-            return;
-        }
+  const onSubmit = async (formData) => {
+    setFormError("");
+    setLoading(true);
 
-        try {
-            const { data } = await api.get(`/users?email=${formData.email}`);
+    try {
+      const result = await resetPassword(formData);
 
-            if (!data.length) {
-                alert('E-mail não cadastrado');
-                return;
-            }
+      if (!result.ok) {
+        setFormError(result.message);
+        return;
+      }
 
-            const user = data[0];
-            await api.patch(`/users/${user.id}`, {
-                senha: formData.senha,
-            });
+      setSuccess(true);
+      setTimeout(() => navigate("/login", { replace: true }), 1500);
+    } catch (error) {
+      console.error("Erro ao redefinir senha:", error);
+      setFormError("Não foi possível redefinir a senha. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            alert('Senha atualizada com sucesso!');
-            navigate('/login');
-        } catch (e) {
-            alert('Erro ao atualizar senha. Tente novamente.');
-        }
-    };
+  return (
+    <>
+      <AuthHeader />
+      <Container>
+        <Column>
+          <Title>
+            A plataforma para você aprender com experts, dominar as principais
+            tecnologias e <span>entrar mais rápido</span> nas empresas mais
+            desejadas.
+          </Title>
+        </Column>
 
-    return (
-        <>
-         
-            <Container>
-                <Column>
-                    <Title>A plataforma para você aprender com experts, dominar as principais tecnologias e entrar mais rápido nas empresas mais desejadas.</Title>
-                </Column>
-                <Column>
-                    <Wrapper>
-                        <TitleLogin>Recupere sua senha</TitleLogin>
-                        <SubtitleLogin>Digite seu e-mail e defina uma nova senha.</SubtitleLogin>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <Input placeholder="E-mail" leftIcon={<MdEmail />} name="email" control={control} />
-                            {errors.email && <span>E-mail é obrigatório</span>}
-                            <Input type="password" placeholder="Nova senha" leftIcon={<MdLock />} name="senha" control={control} />
-                            {errors.senha && <span>Senha é obrigatória</span>}
-                            <Input type="password" placeholder="Confirmar nova senha" leftIcon={<MdLock />} name="confirmSenha" control={control} />
-                            {errors.confirmSenha && <span>Confirmação de senha é obrigatória</span>}
-                            <Button title="Redefinir senha" variant="secondary" type="submit" />
-                        </form>
-                        <Row>
-                            <EsqueciText onClick={() => navigate('/login')}>Voltar ao login</EsqueciText>
-                        </Row>
-                    </Wrapper>
-                </Column>
-            </Container>
-        </>
-    )
-}
+        <Column>
+          <Wrapper>
+            <TitleLogin>Recupere sua senha</TitleLogin>
+            <SubtitleLogin>Digite seu e-mail e defina uma nova senha.</SubtitleLogin>
+
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Input
+                type="email"
+                placeholder="E-mail"
+                leftIcon={<MdEmail />}
+                name="email"
+                control={control}
+                rules={emailRules}
+                errorMessage={errors.email?.message}
+                autoComplete="email"
+              />
+              <Input
+                type="password"
+                placeholder="Nova senha"
+                leftIcon={<MdLock />}
+                name="senha"
+                control={control}
+                rules={passwordRules}
+                errorMessage={errors.senha?.message}
+                autoComplete="new-password"
+              />
+              <Input
+                type="password"
+                placeholder="Confirmar nova senha"
+                leftIcon={<MdLock />}
+                name="confirmSenha"
+                control={control}
+                rules={{
+                  required: "Confirme a nova senha",
+                  validate: (value) => value === senha || "As senhas não coincidem",
+                }}
+                errorMessage={errors.confirmSenha?.message}
+                autoComplete="new-password"
+              />
+
+              {formError && <FormError role="alert">{formError}</FormError>}
+              {success && (
+                <FormSuccess role="status">
+                  Senha atualizada! Redirecionando para o login...
+                </FormSuccess>
+              )}
+
+              <Button
+                title={loading ? "Salvando..." : "Redefinir senha"}
+                variant="secondary"
+                type="submit"
+                disabled={loading || success}
+              />
+            </form>
+
+            <Row>
+              <EsqueciText onClick={() => navigate("/login")}>Voltar ao login</EsqueciText>
+            </Row>
+          </Wrapper>
+        </Column>
+      </Container>
+    </>
+  );
+};
 
 export default ForgotPassword;

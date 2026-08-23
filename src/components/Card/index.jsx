@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-
 import {
   FiThumbsUp,
   FiMessageCircle,
@@ -9,9 +8,13 @@ import {
   FiSend,
   FiUserCheck,
   FiTrash2,
+  FiEdit3,
 } from "react-icons/fi";
 
 import defaultAvatar from "../../assets/avatar-default.svg";
+import { resolveBanner } from "../../data/banners";
+import { formatRelativeDate } from "../../utils/date";
+import { useNow } from "../../hooks/useNow";
 
 import {
   CardContainer,
@@ -21,11 +24,6 @@ import {
   UserPicture,
   PostInfo,
   HasInfo,
-  CourseArea,
-  CourseButtons,
-  SubscribeButton,
-  AccessCourseButton,
-  SubscribersCount,
   Actions,
   ActionButton,
   CommentArea,
@@ -34,50 +32,46 @@ import {
   SendCommentButton,
   CommentList,
   CommentItem,
+  CommentHeader,
+  CommentDeleteButton,
   EmptyComments,
-  DeletePostButton,
+  AdminActions,
+  AdminButton,
+  CourseArea,
+  SubscribersCount,
+  CourseButtons,
+  SubscribeButton,
+  AccessCourseButton,
 } from "./styles";
 
-const COURSE_LINKS = {
-  // React
-  1: "https://www.youtube.com/watch?v=1LhX2u6_BJE&list=PLx4x_zx8csUh752BVDGZkxYpY9lS40fyC&index=1",
-
-  // HTML
-  2: "https://www.youtube.com/playlist?list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n",
-
-  // CSS
-  3: "https://www.youtube.com/playlist?list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n",
-
-  // JavaScript
-  4: "https://www.youtube.com/playlist?list=PLHz_AreHm4dlsK3Nr9GVvXCbpQyHQl1o1",
-
-  // Lógica de Programação
-  5: "https://www.youtube.com/playlist?list=PLHz_AreHm4dmSj0MHol_aoNYCSGFqvfXV",
-
-  // Python
-  6: "https://www.youtube.com/playlist?list=PLHz_AreHm4dlKP6QQCekuIPky1CiwmdI6",
-
-  // Java
-  7: "https://www.youtube.com/playlist?list=PLHz_AreHm4dkI2ZdjTwZA4mPMxWTfNSpR",
-
-  // MySQL
-  8: "https://www.youtube.com/playlist?list=PLHz_AreHm4dkBs-795Dsgvau_ekxg8g1r",
-};
-
-
+/*
+ * Card de publicação do feed.
+ *
+ * Props:
+ *  post          dados da publicação
+ *  currentUser   usuário logado (ou null)
+ *  isAdmin       habilita editar/excluir post e moderar comentários
+ *  onUpdate      (changes) => void   — alterações parciais no post
+ *  onDelete      (postId) => void
+ *  onEdit        (post) => void      — opcional (abre editor do admin)
+ *  onAccessCourse(post) => void      — opcional (registra progresso)
+ *  courseUrl     link do curso vinculado (fallback de post.courseUrl)
+ */
 const Card = ({
   post,
   currentUser,
+  isAdmin = false,
   onUpdate,
   onDelete,
-  isAdmin = false,
+  onEdit,
+  onAccessCourse,
+  courseUrl,
 }) => {
+  const now = useNow();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
 
-  const currentUserId = String(
-    currentUser?.id || currentUser?.email || "visitante"
-  );
+  const currentUserId = String(currentUser?.id || currentUser?.email || "visitante");
 
   const likedBy = post.likedBy || [];
   const savedBy = post.savedBy || [];
@@ -88,44 +82,42 @@ const Card = ({
   const isSaved = savedBy.includes(currentUserId);
   const isSubscribed = subscribedBy.includes(currentUserId);
 
-  const totalLikes = useMemo(() => {
-    return Number(post.likes || 0) + likedBy.length;
-  }, [post.likes, likedBy]);
+  const totalLikes = useMemo(
+    () => Number(post.likes || 0) + likedBy.length,
+    [post.likes, likedBy.length]
+  );
 
-  const totalComments = useMemo(() => {
-    return Number(post.comments || 0) + commentsList.length;
-  }, [post.comments, commentsList]);
+  const totalComments = useMemo(
+    () => Number(post.comments || 0) + commentsList.length,
+    [post.comments, commentsList.length]
+  );
 
-  const totalSubscribers = useMemo(() => {
-    return Number(post.subscribers || 0) + subscribedBy.length;
-  }, [post.subscribers, subscribedBy]);
+  const totalSubscribers = useMemo(
+    () => Number(post.subscribers || 0) + subscribedBy.length,
+    [post.subscribers, subscribedBy.length]
+  );
+
+  const banner = resolveBanner(post);
+  // Sempre calculado a partir da data real de publicação (atualiza a cada minuto).
+  const postedAt = formatRelativeDate(post.createdAt, now) || post.time || "Agora mesmo";
 
   const updatePost = (changes) => {
-    if (!onUpdate) return;
-
-    onUpdate({
-      ...post,
-      ...changes,
-    });
+    onUpdate?.(changes);
   };
 
   const handleLike = () => {
-    const updatedLikedBy = isLiked
-      ? likedBy.filter((userId) => userId !== currentUserId)
-      : [...likedBy, currentUserId];
-
     updatePost({
-      likedBy: updatedLikedBy,
+      likedBy: isLiked
+        ? likedBy.filter((userId) => userId !== currentUserId)
+        : [...likedBy, currentUserId],
     });
   };
 
   const handleSave = () => {
-    const updatedSavedBy = isSaved
-      ? savedBy.filter((userId) => userId !== currentUserId)
-      : [...savedBy, currentUserId];
-
     updatePost({
-      savedBy: updatedSavedBy,
+      savedBy: isSaved
+        ? savedBy.filter((userId) => userId !== currentUserId)
+        : [...savedBy, currentUserId],
     });
   };
 
@@ -135,34 +127,39 @@ const Card = ({
       return;
     }
 
-    const updatedSubscribedBy = isSubscribed
-      ? subscribedBy.filter((userId) => userId !== currentUserId)
-      : [...subscribedBy, currentUserId];
-
     updatePost({
-      subscribedBy: updatedSubscribedBy,
+      subscribedBy: isSubscribed
+        ? subscribedBy.filter((userId) => userId !== currentUserId)
+        : [...subscribedBy, currentUserId],
     });
   };
-const handleAccessCourse = () => {
-  if (!isSubscribed) {
-    alert("Inscreva-se para acessar a aula completa.");
-    return;
-  }
 
-  const courseUrl = post.courseUrl || COURSE_LINKS[post.id];
+  const handleAccessCourse = () => {
+    if (!isSubscribed) {
+      alert("Inscreva-se para acessar a aula completa.");
+      return;
+    }
 
-  if (!courseUrl) {
-    alert("A aula deste curso ainda não está disponível.");
-    return;
-  }
+    const url = post.courseUrl || courseUrl;
 
-  window.location.href = courseUrl;
-};
+    if (!url) {
+      alert("A aula deste curso ainda não está disponível.");
+      return;
+    }
+
+    onAccessCourse?.(post);
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   const handleComment = (event) => {
     event.preventDefault();
 
     if (!commentText.trim()) return;
+
+    if (!currentUser) {
+      alert("Faça login para comentar.");
+      return;
+    }
 
     const newComment = {
       id: Date.now(),
@@ -173,11 +170,17 @@ const handleAccessCourse = () => {
       createdAt: new Date().toISOString(),
     };
 
-    updatePost({
-      commentsList: [...commentsList, newComment],
-    });
-
+    updatePost({ commentsList: [...commentsList, newComment] });
     setCommentText("");
+  };
+
+  const handleDeleteComment = (commentId) => {
+    const confirmed = window.confirm("Deseja excluir este comentário?");
+    if (!confirmed) return;
+
+    updatePost({
+      commentsList: commentsList.filter((comment) => comment.id !== commentId),
+    });
   };
 
   const handleShare = async () => {
@@ -207,35 +210,45 @@ const handleAccessCourse = () => {
     }
   };
 
+  const canDeleteComment = (comment) =>
+    isAdmin || String(comment.userId) === currentUserId;
+
   return (
     <CardContainer id={`post-${post.id}`}>
-      {post.banner && (
-        <ImageBackground
-          src={post.banner}
-          alt={`Banner da publicação ${post.title}`}
-        />
-      )}
+      {banner && <ImageBackground src={banner} alt={`Banner da publicação ${post.title}`} />}
 
       <Content>
         {isAdmin && (
-  <DeletePostButton
-    type="button"
-    onClick={() => onDelete?.(post.id)}
+          <AdminActions>
+            {onEdit && (
+              <AdminButton
+                type="button"
+                onClick={() => onEdit(post)}
+                aria-label="Editar publicação"
+                title="Editar publicação"
+              >
+                <FiEdit3 />
+              </AdminButton>
+            )}
 
-  >
-    <FiTrash2 />
-   
-  </DeletePostButton>
-)}
+            <AdminButton
+              type="button"
+              $danger
+              onClick={() => onDelete?.(post.id)}
+              aria-label="Excluir publicação"
+              title="Excluir publicação"
+            >
+              <FiTrash2 />
+            </AdminButton>
+          </AdminActions>
+        )}
+
         <UserInfo>
-          <UserPicture
-            src={post.avatar || defaultAvatar}
-            alt={post.user || "Usuário"}
-          />
+          <UserPicture src={post.avatar || defaultAvatar} alt={post.user || "Usuário"} />
 
           <div>
             <h4>{post.user || "Usuário"}</h4>
-            <p>{post.time || "Agora mesmo"}</p>
+            <p>{postedAt}</p>
           </div>
         </UserInfo>
 
@@ -251,95 +264,35 @@ const handleAccessCourse = () => {
             ))}
           </HasInfo>
         )}
-<div
-  style={{
-    marginTop: "24px",
-    padding: "18px",
-    background: "rgba(111, 0, 255, 0.1)",
-    border: "1px solid rgba(111, 0, 255, 0.4)",
-    borderRadius: "14px",
-  }}
->
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      gap: "8px",
-      marginBottom: "14px",
-      color: "#ffffff",
-      fontWeight: "600",
-    }}
-  >
-    <FiUserCheck color="#00e676" size={19} />
 
-    <span>
-      {totalSubscribers}{" "}
-      {totalSubscribers === 1 ? "inscrito" : "inscritos"}
-    </span>
-  </div>
+        <CourseArea>
+          <SubscribersCount>
+            <FiUserCheck />
+            <span>
+              {totalSubscribers} {totalSubscribers === 1 ? "inscrito" : "inscritos"}
+            </span>
+          </SubscribersCount>
 
-  <div
-    style={{
-      display: "flex",
-      flexWrap: "wrap",
-      gap: "12px",
-    }}
-  >
-    <button
-      type="button"
-      onClick={handleSubscribe}
-      style={{
-        minWidth: "150px",
-        padding: "12px 20px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "9px",
-        border: isSubscribed
-          ? "1px solid #00e676"
-          : "none",
-        borderRadius: "10px",
-        background: isSubscribed
-          ? "rgba(0, 230, 118, 0.12)"
-          : "#6f00ff",
-        color: isSubscribed ? "#00e676" : "#ffffff",
-        cursor: "pointer",
-        fontSize: "14px",
-        fontWeight: "700",
-      }}
-    >
-      <FiUserCheck size={19} />
+          <CourseButtons>
+            <SubscribeButton
+              type="button"
+              $subscribed={isSubscribed}
+              onClick={handleSubscribe}
+            >
+              <FiUserCheck />
+              {isSubscribed ? "Inscrito" : "Inscrever-se"}
+            </SubscribeButton>
 
-      {isSubscribed ? "Inscrito" : "Inscrever-se"}
-    </button>
-
-    <button
-      type="button"
-      onClick={handleAccessCourse}
-      style={{
-        minWidth: "150px",
-        padding: "12px 20px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "9px",
-        border: `1px solid ${
-          isSubscribed ? "#00e676" : "#77727f"
-        }`,
-        borderRadius: "10px",
-        background: "transparent",
-        color: isSubscribed ? "#00e676" : "#9b98a1",
-        cursor: "pointer",
-        fontSize: "14px",
-        fontWeight: "700",
-      }}
-    >
-      <FiPlayCircle size={20} />
-
-      Acessar curso
-      </button>
-     </div>
-     </div>
+            <AccessCourseButton
+              type="button"
+              $locked={!isSubscribed}
+              onClick={handleAccessCourse}
+            >
+              <FiPlayCircle />
+              Acessar curso
+            </AccessCourseButton>
+          </CourseButtons>
+        </CourseArea>
 
         <Actions>
           <ActionButton
@@ -347,6 +300,7 @@ const handleAccessCourse = () => {
             $active={isLiked}
             onClick={handleLike}
             title={isLiked ? "Remover curtida" : "Curtir"}
+            aria-pressed={isLiked}
           >
             <FiThumbsUp />
             <span>{totalLikes}</span>
@@ -355,9 +309,7 @@ const handleAccessCourse = () => {
           <ActionButton
             type="button"
             $active={showComments}
-            onClick={() => {
-              setShowComments((current) => !current);
-            }}
+            onClick={() => setShowComments((current) => !current)}
             title="Comentários"
           >
             <FiMessageCircle />
@@ -369,16 +321,13 @@ const handleAccessCourse = () => {
             $active={isSaved}
             onClick={handleSave}
             title={isSaved ? "Remover dos salvos" : "Salvar"}
+            aria-pressed={isSaved}
           >
             <FiBookmark />
             <span>{isSaved ? "Salvo" : "Salvar"}</span>
           </ActionButton>
 
-          <ActionButton
-            type="button"
-            onClick={handleShare}
-            title="Compartilhar"
-          >
+          <ActionButton type="button" onClick={handleShare} title="Compartilhar">
             <FiShare2 />
             <span>Enviar</span>
           </ActionButton>
@@ -388,37 +337,44 @@ const handleAccessCourse = () => {
           <CommentArea>
             <CommentForm onSubmit={handleComment}>
               <CommentInput
-                placeholder="Escreva um comentário..."
+                placeholder="Digite seu comentário..."
                 value={commentText}
-                onChange={(event) => {
-                  setCommentText(event.target.value);
-                }}
+                onChange={(event) => setCommentText(event.target.value)}
                 maxLength={300}
               />
 
-              <SendCommentButton
-                type="submit"
-                aria-label="Enviar comentário"
-              >
+              <SendCommentButton type="submit" aria-label="Enviar comentário">
                 <FiSend />
               </SendCommentButton>
             </CommentForm>
 
             <CommentList>
               {commentsList.length === 0 ? (
-                <EmptyComments>
-                  Seja a primeira pessoa a comentar.
-                </EmptyComments>
+                <EmptyComments>Seja a primeira pessoa a comentar.</EmptyComments>
               ) : (
                 commentsList.map((comment) => (
                   <CommentItem key={comment.id}>
-                    <img
-                      src={comment.avatar || defaultAvatar}
-                      alt={comment.user || "Usuário"}
-                    />
+                    <img src={comment.avatar || defaultAvatar} alt={comment.user || "Usuário"} />
 
                     <div>
-                      <strong>{comment.user}</strong>
+                      <CommentHeader>
+                        <strong>{comment.user}</strong>
+                        <time dateTime={comment.createdAt}>
+                          {formatRelativeDate(comment.createdAt, now)}
+                        </time>
+
+                        {canDeleteComment(comment) && (
+                          <CommentDeleteButton
+                            type="button"
+                            onClick={() => handleDeleteComment(comment.id)}
+                            aria-label="Excluir comentário"
+                            title="Excluir comentário"
+                          >
+                            <FiTrash2 />
+                          </CommentDeleteButton>
+                        )}
+                      </CommentHeader>
+
                       <p>{comment.text}</p>
                     </div>
                   </CommentItem>

@@ -7,6 +7,10 @@ export const Container = styled.div`
 export const Cover = styled.div`
   width: 100%;
   height: 220px;
+
+  @media (max-width: 480px) {
+    height: 160px;
+  }
   border-radius: 16px;
   cursor: ${({ image }) =>
     image ? "pointer" : "default"};
@@ -18,7 +22,7 @@ export const Cover = styled.div`
           135deg,
           #1f1f1f,
           #2d2d2d,
-          #6f00ff
+          #8B5CF6
         )`};
 `;
 
@@ -29,6 +33,11 @@ export const Content = styled.div`
 
     display:flex;
     flex-direction:column;
+    align-items:center;
+
+    @media (max-width: 768px) {
+        padding: 0 16px;
+    }
 `;
 
 export const AvatarWrapper = styled.div`
@@ -99,7 +108,7 @@ export const CameraButton = styled.button`
     border: none;
     border-radius: 50%;
 
-    background: #8257e5;
+    background: #8B5CF6;
     color: white;
 
     display: flex;
@@ -163,7 +172,7 @@ export const InfoItem = styled.span`
   font-size: 14px;
 
   a {
-    color: #9b72ff;
+    color: #c4b5fd;
     text-decoration: none;
     font-weight: 600;
   }

@@ -1,56 +1,159 @@
 import styled from "styled-components";
+import { theme, media } from "../../styles/theme";
+
+const { colors } = theme;
 
 export const Container = styled.div`
-  min-height: 100vh;
-  background: #141414;
   display: flex;
   justify-content: center;
-  padding: 40px 20px;
+
+  padding: 32px 20px 60px;
+
+  ${media.tablet} {
+    padding: 24px 14px 48px;
+  }
 `;
 
 export const Card = styled.div`
   width: 100%;
   max-width: 700px;
-  background: #202024;
-  border-radius: 16px;
+
   padding: 30px;
+
+  background: ${colors.surface};
+  border: 1px solid ${colors.border};
+  border-radius: ${theme.radius.lg};
+
+  box-shadow: ${theme.shadow.card};
+
+  ${media.mobile} {
+    padding: 20px 16px;
+  }
 `;
 
 export const Title = styled.h2`
-  color: white;
-  margin-bottom: 25px;
+  margin-bottom: 24px;
+
+  color: ${colors.text};
+  font-size: 26px;
+`;
+
+export const Label = styled.label`
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: ${colors.textMuted};
+
+  font-size: 13px;
+  font-weight: 600;
 `;
 
 export const Input = styled.input`
   width: 100%;
-  padding: 14px;
-  margin-bottom: 18px;
-  border-radius: 8px;
-  border: none;
-  background: #2d2d30;
-  color: white;
+
+  margin-bottom: 16px;
+  padding: 13px 14px;
+
+  border: 1px solid ${colors.border};
+  border-radius: ${theme.radius.md};
+
+  background: ${colors.background};
+  color: ${colors.text};
+
   outline: none;
+
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: ${colors.textSubtle};
+  }
+
+  &:focus {
+    border-color: ${colors.primary};
+  }
 `;
 
 export const TextArea = styled.textarea`
   width: 100%;
-  padding: 14px;
-  border-radius: 8px;
-  border: none;
-  background: #2d2d30;
-  color: white;
-  resize: none;
-  margin-bottom: 20px;
+
+  margin-bottom: 16px;
+  padding: 13px 14px;
+
+  border: 1px solid ${colors.border};
+  border-radius: ${theme.radius.md};
+
+  background: ${colors.background};
+  color: ${colors.text};
+
   outline: none;
+  resize: vertical;
+
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: ${colors.textSubtle};
+  }
+
+  &:focus {
+    border-color: ${colors.primary};
+  }
+`;
+
+export const Helper = styled.p`
+  margin: -8px 0 16px;
+
+  color: ${colors.textSubtle};
+  font-size: 12px;
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 8px;
+
+  ${media.mobile} {
+    flex-direction: column-reverse;
+  }
 `;
 
 export const Button = styled.button`
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-  background: #8257e5;
-  color: white;
+  min-width: 160px;
+
+  padding: 13px 24px;
+
+  border: 1px solid ${colors.primary};
+  border-radius: ${theme.radius.md};
+
+  background: ${colors.primary};
+  color: ${colors.background};
+
+  font-weight: 700;
+
   cursor: pointer;
-  font-weight: bold;
+
+  transition: 0.2s;
+
+  &:hover:not(:disabled) {
+    box-shadow: ${theme.shadow.glow};
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+`;
+
+export const SecondaryButton = styled(Button)`
+  background: transparent;
+  border-color: ${colors.borderStrong};
+  color: ${colors.text};
+
+  &:hover:not(:disabled) {
+    border-color: ${colors.primary};
+    color: ${colors.primary};
+    box-shadow: none;
+  }
 `;

@@ -21,3 +21,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# backup gerado por npm run seed
+db.json.bak
+
+# configuração local do Claude Code
+.claude/

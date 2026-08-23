@@ -30,3 +30,8 @@ export const Description = styled.p`
   color: #c8c8c8;
   font-size: 14px;
 `;
+
+export const EmptyText = styled.p`
+  color: #8f8f9b;
+  font-size: 14px;
+`;

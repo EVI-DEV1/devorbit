@@ -1,70 +1,90 @@
-# Getting Started with Create React App
+# DevOrbit — Comunidade de Desenvolvedores
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> A comunidade que orbita em torno do código.
 
-## Available Scripts
+Plataforma de comunidade para desenvolvedores construída em React: feed de
+publicações, catálogo de cursos com progresso, curtidas, comentários, chat,
+Top 5 da semana, perfil completo e um painel administrativo para alimentar a
+plataforma sem mexer no código.
 
-In the project directory, you can run:
+## Como rodar
 
-### `npm start`
+```bash
+npm install
+npm run dev        # sobe o app (3000) e a API json-server (8001) juntos
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Ou separadamente:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm run api        # json-server em http://localhost:8001 (db.json)
+npm start          # app em http://localhost:3000
+```
 
-### `npm test`
+Se a API não estiver rodando, o app continua funcionando com os dados locais
+(seed em `src/data`) e salva as alterações no `localStorage` do navegador.
+O painel administrativo mostra no topo se está conectado à API ou não.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Restaurar os dados iniciais
 
-### `npm run build`
+```bash
+npm run seed       # regenera db.json a partir de src/data (faz backup em db.json.bak)
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Acessos de teste
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Perfil        | E-mail                | Senha     |
+| ------------- | --------------------- | --------- |
+| Administrador | `eviofc4@gmail.com`       | `123456`  |
+| Usuário       | `isabela@devorbit.dev`| `123456`  |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Qualquer um pode criar uma conta nova em **Criar conta**.
 
-### `npm run eject`
+## Permissões
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```text
+ADMIN    → /admin/*  cria/edita/exclui cursos, publicações, usuários,
+                     gerencia o Top 5 e modera comentários
+USUÁRIO  → /feed /courses /profile  consome e interage
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Rotas internas exigem login (`PrivateRoute`); rotas `/admin/*` exigem
+`role: "admin"` (`AdminRoute`). Um usuário comum que digitar `/admin` é
+devolvido ao feed.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Estrutura
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```text
+src/
+├── assets/          imagens (banners dos cursos, avatar padrão)
+├── components/      Header, Card, CourseCard, TopFive, ProfileDrawer, Modal, ...
+├── contexts/
+│   ├── DataContext  posts, cursos e usuários (API → cache local → seed)
+│   └── AuthContext  sessão, login, cadastro, permissões
+├── data/            seed: posts.js, courses.js, users.js, banners.js
+├── hooks/           useCourseProgress (progresso e XP do usuário)
+├── pages/
+│   ├── home, login, signup, ForgotPassword
+│   ├── feed, courses, Profile, EditProfile
+│   └── admin/       Dashboard, CoursesAdmin, PostsAdmin, UsersAdmin, TopFiveAdmin, CommentsAdmin
+├── routes/          mapa de rotas + guards
+├── services/        api (axios) e storage (localStorage)
+├── styles/          theme.js (identidade visual) e global.js
+└── utils/           date, search, image, validation
+```
 
-## Learn More
+## Identidade visual
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Nome:** DevOrbit
+- **Paleta:** fundo `#120F1C`, superfícies `#1C1828` / `#252036`,
+  verde `#00E676` (ação), violeta `#8B5CF6` (administração/destaque)
+- **Tipografia:** Sora (títulos) e Inter (texto)
+- **Logo/favicon:** SVG em `src/components/Logo` e `public/favicon.svg`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Todos os tokens vivem em `src/styles/theme.js`.
 
-### Code Splitting
+## Preparado para backend real
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Os componentes só conversam com `DataContext`/`AuthContext`. Para trocar o
+json-server por uma API real basta ajustar `src/services/api.js` e as funções
+`remote*` em `src/contexts/DataContext.jsx`.
